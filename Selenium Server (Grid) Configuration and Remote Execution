@@ -1,0 +1,34 @@
+package newp3;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+
+public class n1 {
+
+    public static WebDriver driver;
+    static String driverPath = "C:\\Users\\DELL\\Downloads\\geckodriver.exe";
+
+    public static void main(String[] args) {
+
+        System.out.println("hi");
+        System.out.println("Starting Selenium demo...");
+
+        System.setProperty("webdriver.gecko.driver", driverPath);
+
+        FirefoxOptions options = new FirefoxOptions();
+
+        driver = new FirefoxDriver(options);
+
+        try {
+            driver.get("https://www.google.com/");
+            driver.manage().window().maximize();
+        } catch (Exception ex) {
+            System.out.println("An error occurred: " + ex);
+        } finally {
+            if (driver != null) {
+                driver.quit();
+            }
+        }
+    }
+}
