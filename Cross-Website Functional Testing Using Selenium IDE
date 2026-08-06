@@ -1,0 +1,32 @@
+Websites Used
+1. https://www.saucedemo.com
+2. https://demoqa.com
+Test Cases
+Website 1: SauceDemo
+1. Open the website.
+2. Enter valid Username and Password.
+3. Click the Login button.
+4. Verify the Products page is displayed.
+5. Add a product to the cart.
+Website 2: DemoQA
+1. Open the website.
+2. Navigate to Widgets → Select Menu.
+3. Select a value from the dropdown menu.
+4. Go to Elements → Text Box.
+5. Fill the form with Name, Email, Current Address, and Permanent Address.
+6. Click Submit.
+7. Verify the entered details are displayed.
+Procedure
+1. Install Selenium IDE in the browser.
+2. Create a new project.
+3. Create a test suite.
+4. Record test cases for both websites.
+5. Save the test cases.
+6. Run the complete test suite.
+7. Check the execution logs and test results.
+Expected Result
+ Login should be successful on SauceDemo.
+ Product should be added to the cart.
+ Dropdown value should be selected successfully.
+ Form should be submitted successfully.
+ Entered details should be displayed correctly.
