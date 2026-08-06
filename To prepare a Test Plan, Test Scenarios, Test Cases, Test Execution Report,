@@ -1,0 +1,27 @@
+Software Required
+ MS Excel or Google Sheets
+ Internet Browser (Chrome/Firefox)
+ Sample Website
+Use this demo website: https://practicetestautomation.com/practice-test-login/
+
+Step 1: Open Excel
+Step 2: Prepare Test Plan
+Step 3: Prepare Test Scenarios:
+Step 4: Prepare Test Cases
+Step 5: Execute Test Cases
+Open browser.
+Visit
+https://practicetestautomation.com/practice-test-login/
+Valid Credentials
+Username
+student
+Password
+Password123
+Step 6: Prepare Test Execution Report
+Step 7: Prepare Defect Report
+Step 8: STLC Process
+
+Result
+The Test Plan, Test Scenarios, Test Cases, Test Execution Report, and Defect Report
+were successfully prepared and executed manually using MS Excel/Google Sheets
+according to the STLC process.
