@@ -1,0 +1,44 @@
+XML
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="Console">
+            <PatternLayout pattern="%d %-5level %msg%n"/>
+        </Console>
+
+        <File name="File" fileName="logs/logTest.log">
+            <PatternLayout pattern="%d %-5level %msg%n"/>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>
+
+JAVA
+
+
+package p14;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class LogTest {
+
+    static Logger log = LogManager.getLogger(LogTest.class);
+
+    public static void main(String[] args) {
+
+        log.info("Test Started");
+
+        log.info("Firefox opened");
+
+        log.error("Sample Error");
+
+        log.info("Test Finished");
+    }
+}
