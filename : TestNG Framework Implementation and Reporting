@@ -1,0 +1,285 @@
+1. Requirements  
+1.	Java JDK  
+2.	Eclipse IDE  
+3.	Selenium WebDriver  
+4.	TestNG  
+5.	Firefox browser  
+6.	Internet connection  
+   
+2. What We Will Perform  
+In this practical, we will create 3 simple test cases:  
+ 	Test Case  	Purpose  	Priority  Group  
+Login Test  	Verify login  1 Smoke Title Test  	Verify page title  	2 Smoke  
+Invalid Login Test Verify invalid login  	3 Regression We will also use:  
+●	@BeforeMethod  
+●	@AfterMethod  
+●	@Test  
+●	priority  
+●	groups  
+●	Assert  
+   
+3. Create Java Project  
+Open Eclipse.  
+Go to:  
+File → New → Java Project Enter:  
+TestNGDemo  
+Click Finish.  
+Your Eclipse project:  
+TestNGDemo  │  
+├── JRE System Library └── src 
+   
+4. Add Selenium JAR Files  
+If Selenium is already configured, skip this step.  Right-click:  
+TestNGDemo → Build Path → Configure Build Path Then:  Libraries → Classpath → Add External JARs Select your Selenium JAR files.  
+Click:  
+Apply and Close  
+   
+5. Install TestNG  
+In Eclipse:  
+Help → Eclipse Marketplace Search:  
+TestNG  
+Install TestNG for Eclipse.  Restart Eclipse if required.  
+   
+6. Create Test Package  
+Right-click:  
+src  
+Select:  
+New → Package  
+Enter:  
+tests Click Finish.  
+Your structure:  TestNGDemo  
+└── src     └── tests 
+   
+7. Create Test Class  
+Right-click tests.  
+Select:  
+New → Class  
+Enter:  
+SauceDemoTest 
+Click Finish.  
+   
+8. Write the TestNG Program  
+Copy the following code:  
+package tests;  
+  
+import org.openqa.selenium.By; import 
+org.openqa.selenium.WebDriver;  
+import 
+org.openqa.selenium.firefox.FirefoxDriver;  
+  
+import org.testng.Assert;  import org.testng.annotations.AfterMethod; import org.testng.annotations.BeforeMethod; import org.testng.annotations.Test;  
+  
+public class SauceDemoTest {  
+  
+    WebDriver driver;  
+  
+    @BeforeMethod     public void setUp() {  
+  
+        driver = new FirefoxDriver();          driver.manage().window().maximize();  
+  
+        driver.get("https://www.saucedemo.com/");     }  
+  
+    // Test Case 1  
+    @Test(priority = 1, groups = {"Smoke"})     public void loginTest() {           driver.findElement(By.id("username"))  
+              .sendKeys("standard_user");  
+         driver.findElement(By.id("password"))  
+              .sendKeys("secret_sauce");  
+  
+        driver.findElement(By.id("loginbutton"))  
+              .click();  
+  
+        String url = driver.getCurrentUrl();   
+        Assert.assertTrue(url.contains("inventory"));  
+  
+        System.out.println("Login Test Passed");  
+    }  
+  
+    // Test Case 2  
+    @Test(priority = 2, groups = {"Smoke"})     public void titleTest() {  
+  
+        String title = driver.getTitle();  
+  
+        Assert.assertEquals(title, "Swag 
+Labs");  
+  
+        System.out.println("Title Test 
+Passed");     }  
+  
+    // Test Case 3  
+    @Test(priority = 3, groups = {"Regression"})     public void invalidLoginTest() {  
+  
+        driver.findElement(By.id("user-name"))  
+              .sendKeys("wrong_user");           driver.findElement(By.id("password"))  
+              .sendKeys("wrong_password");  
+  
+        driver.findElement(By.id("login-
+button"))  
+              .click();  
+  
+        boolean errorMessage =  
+                driver.findElement(By.cssSelector("[data-test='error']"))                     
+.isDisplayed();  
+  
+        Assert.assertTrue(errorMessage);  
+  
+        System.out.println("Invalid Login Test Passed");      }  
+  
+    @AfterMethod  
+    public void tearDown() {  
+  
+        driver.quit();  
+    } } 
+   
+9. Understand the TestNG Annotations  
+@BeforeMethod  
+@BeforeMethod public void setUp()  
+This method runs before every test case.  
+It:  
+1.	Opens Firefox.  
+2.	Maximizes the browser.  
+3.	Opens the website.  
+   
+@Test Example:  
+@Test(priority = 1, groups = {"Smoke"})  
+This tells TestNG that the method is a test case.  
+  priority We have:  
+priority = 1 priority = 2 priority = 3  
+Therefore TestNG executes them in this order:  
+1	→ Login Test  
+2	→ Title Test  
+3	→ Invalid Login Test  
+Lower priority number executes first.  
+   
+10. TestNG Groups  
+We have created two groups.  
+Smoke 	Group 
+groups = {"Smoke"} 
+Contains:  
+Login Test  
+Title Test Regression 
+Group 	groups 	= 
+{"Regression"} Contains:  
+Invalid Login Test  
+Groups are useful when we want to execute only selected test cases.  
+   
+11. TestNG Assertion  
+For login:  
+Assert.assertTrue(url.contains("inventory")); 
+It checks whether login was successful.  For title:  
+Assert.assertEquals(title, "Swag Labs");  
+It checks whether the page title is correct.  
+   
+12. Run the Complete Test  
+Right-click:  
+SauceDemoTest.java  
+Select:  
+Run As → TestNG Test  
+Firefox will open three times because @BeforeMethod runs before every test. Expected execution:  Login Test  
+     ↓  
+Browser closes  
+  
+Title Test  
+     ↓  
+Browser closes  
+  
+Invalid Login Test  
+     ↓ Browser closes 
+   
+13. Expected Console Output  
+You should see:  Login Test Passed  
+Title Test Passed Invalid 
+Login Test Passed And 
+TestNG should show:  
+Total tests run: 3  Failures: 0  
+Skipped: 0 
+   
+14. Create TestNG XML File  
+Now we will use a TestNG XML file to select groups.  Right-click the project:  
+TestNG → Convert to TestNG  
+If this option is available, select it.  
+Alternatively:  
+File → New → Other → TestNG → TestNG Class  
+Create: 
+testng.xml  
+A simple XML file can be:  
+<?xml version="1.0" encoding="UTF-8"?>  
+  
+<!DOCTYPE suite SYSTEM  
+"https://testng.org/testng-1.0.dtd">  
+  
+<suite name="TestNG Suite">  
+  
+    <test name="Smoke Tests">  
+  
+        <groups>  
+            <run>  
+                <include name="Smoke"/>  
+            </run>  
+        </groups>  
+  
+        <classes>  
+            <class name="tests.SauceDemoTest"/>  
+        </classes>  
+  
+    </test>  
+ </suite> 
+   
+15. Run Only Smoke Tests  
+Right-click:  
+testng.xml  
+Select:  
+Run As → TestNG Suite  Only these tests will execute:  
+Login Test  
+Title Test  
+The Regression test will not execute.  
+   
+16. Generate HTML Test Report  
+When TestNG tests are executed, TestNG automatically creates a report.  After execution, refresh the project: Right-click Project → Refresh You will see:  
+TestNGDemo  
+│  
+├── src  
+│   └── tests  
+│       └── SauceDemoTest.java  │  
+├── test-output  │  
+└── testng.xml  
+The important folder is: testoutput  
+Inside it, you will find files such as:  
+index.html emailable-report.html testng-results.xml 
+   
+17. Open HTML Report  
+Open:  
+test-output        
+↓    index.html  
+Double-click index.html.  
+It will open in your browser.  
+You will see information such as:  
+TestNG Results  
+  
+Tests Run: 2  
+Passed: 2  
+Failed: 0 Skipped: 0  
+Report Flow  
+TestNG Test Execution  
+        ↓  
+Test Results         
+↓  test-output folder  
+        ↓ index.html  
+        ↓ HTML Test Report 
+   
+  
+  
+  
+  
+18. Simple Eclipse Project Layout  
+Your final project should look like:  
+TestNGDemo  
+│  
+├── JRE System Library  
+│  
+├── src  
+│   └── tests  
+│       └── SauceDemoTest.java  │  
+├── test-output  
+│   ├── index.html  
+│   ├── emailable-report.html  
+│   └── testng-results.xml  
