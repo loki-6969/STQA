@@ -1,0 +1,81 @@
+
+package p11;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import java.util.List;
+
+public class checkboxTest {
+
+    static String driverPath =
+            "C:\\Users\\STUDENT_039\\Downloads\\geckodriver.exe";
+
+    public static void main(String[] args) {
+
+        System.setProperty("webdriver.gecko.driver", driverPath);
+
+        FirefoxOptions options = new FirefoxOptions();
+        options.addPreference("signon.rememberSignons", false);
+        options.addPreference("datareporting.healthreport.uploadEnabled", false);
+        options.addPreference("toolkit.telemetry.enabled", false);
+        options.addPreference("toolkit.telemetry.unified", false);
+        options.addPreference("browser.newtabpage.enabled", false);
+        options.addPreference("browser.newtabpage.activity-stream.enabled", false);
+
+        WebDriver driver = new FirefoxDriver(options);
+
+        String appUrl =
+                "file:///C:/Users/STUDENT_039/Desktop/arr.html";
+
+        driver.get(appUrl);
+
+        List<WebElement> checkboxes =
+                driver.findElements(By.name("subject"));
+
+        int total = checkboxes.size();
+
+        System.out.println("Total No. of Checkboxes: " + total);
+
+        int checked = 0;
+        int unchecked = 0;
+
+        for (WebElement checkbox : checkboxes) {
+            if (checkbox.isSelected()) {
+                checked++;
+            } else {
+                unchecked++;
+            }
+        }
+
+        System.out.println("Total Checked Checkboxes: " + checked);
+        System.out.println("Total Unchecked Checkboxes: " + unchecked);
+
+        WebElement selectedCheckbox = null;
+
+        for (WebElement checkbox : checkboxes) {
+            if (checkbox.isSelected()) {
+                selectedCheckbox = checkbox;
+                selectedCheckbox.click();
+
+                System.out.println(
+                        "Checkbox selected: " +
+                        selectedCheckbox.getAttribute("value")
+                );
+
+                break;
+            }
+        }
+
+        if (selectedCheckbox != null &&
+                selectedCheckbox.isSelected()) {
+            System.out.println("Checkbox Validation: PASS");
+        } else {
+            System.out.println("Checkbox Validation: FAIL");
+        }
+
+        driver.quit();
+    }
+}
