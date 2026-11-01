@@ -1,0 +1,117 @@
+Step 1: Create Java Project
+1. Open Eclipse. 2. Go to File → New → Java Project. 3. Enter project name:
+WebElementInteraction
+4. Click Finish. Step 2: Add Selenium JAR Files
+1. Right-click the project.
+2. Select Build Path → Configure Build Path. 3. Select Libraries. 4. Click Classpath → Add External JARs. 5. Select your Selenium JAR files.
+6. Click Apply and Close. Step 3: Create HTML Test Page
+Create a file named:
+elements.html
+Save it on your Desktop. Use this simple HTML page:
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Selenium Web Elements</title>
+</head>
+<body>
+<h2>Web Element Interaction</h2>
+Name:
+<input type="text" id="name">
+<br><br>
+Gender:
+<input type="radio" name="gender" value="Male"> Male
+<input type="radio" name="gender" value="Female"> Female
+<br><br>
+Skills:
+<input type="checkbox" id="java"> Java
+<input type="checkbox" id="python"> Python
+<br><br>
+Course:
+<select id="course">
+ <option value="IT">Information Technology</option>
+ <option value="CS">Computer Science</option>
+ <option value="BCA">BCA</option>
+</select>
+<br><br>
+<button onclick="showAlert()">Show Alert</button>
+<br><br>
+<iframe src="frame.html" width="300" height="100"></iframe>
+<script>
+function showAlert() {
+ alert("Welcome to Selenium!");
+}
+</script>
+</body>
+</html>
+Step 4: Create Frame HTML File
+Create another file named:
+frame.html
+Put this code inside:
+<!DOCTYPE html>
+<html>
+<body>
+<h3 id="frameText">This is inside the Frame</h3>
+</body>
+</html>
+Keep both files in the same folder. For example:
+Desktop
+ ├── elements.html
+ └── frame.html
+Step 5: Create Java Class
+In Eclipse:
+1. Right-click src
+2. Select New → Class
+3. Class Name:
+WebElementInteraction
+4. Click Finish. Step 6: Write Java ProgramUse the following simple program:
+import java.time.Duration;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+public class WebElementInteraction {
+ public static void main(String[] args) {
+ // Set GeckoDriver path
+ System.setProperty("webdriver.gecko.driver",
+ "C:\\Users\\DELL\\Downloads\\geckodriver.exe");
+ // Open Firefox
+ WebDriver driver = new FirefoxDriver();
+ // Implicit Wait
+ driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+ // Open HTML page
+ driver.get("file:///C:/Users/DELL/Desktop/elements.html");
+ driver.manage().window().maximize();
+ // Explicit Wait
+ WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // 1. Textbox
+ WebElement name = wait.until(
+ ExpectedConditions.visibilityOfElementLocated(By.id("name"))); name.sendKeys("Aijaz");
+ // 2. Radio Button
+ driver.findElement(By.xpath("//input[@value='Male']")).click();
+ // 3. Checkbox
+ driver.findElement(By.id("java")).click();
+ // 4. Dropdown
+ WebElement course = driver.findElement(By.id("course"));
+ Select select = new Select(course);
+ select.selectByVisibleText("Information Technology");
+ // 5. Alert
+ driver.findElement(By.xpath("//button[text()='Show Alert']")).click(); Alert alert = wait.until(
+ ExpectedConditions.alertIsPresent());
+ System.out.println("Alert Message: " + alert.getText());
+ alert.accept();
+ // 6. Frame
+ driver.switchTo().frame(0);
+ WebElement frameText = wait.until(
+ ExpectedConditions.visibilityOfElementLocated(
+ By.id("frameText")));
+ System.out.println("Frame Text: " + frameText.getText());
+ // Switch back from frame
+ driver.switchTo().defaultContent();
+ System.out.println("Test Completed Successfully");
+ // Close browser
+ driver.quit();
+ }
+}
