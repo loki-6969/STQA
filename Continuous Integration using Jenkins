@@ -1,0 +1,291 @@
+1. Basic CI Concept  
+Continuous Integration (CI) means automatically building and testing software whenever changes are made.  
+In our practical:  
+Selenium TestNG Project  
+        ↓  
+      Jenkins  
+        ↓  
+   Build Project  
+        ↓  
+ Execute Test Cases  
+        ↓  
+ TestNG Results  
+        ↓  
+ Generate Report  
+        ↓  Analyze Build History 
+   
+2. Requirements  
+1.	Windows computer  
+2.	Java JDK  
+3.	Eclipse  
+4.	Selenium WebDriver  
+5.	TestNG  
+6.	Jenkins  
+7.	Firefox browser  
+8.	Internet connection  
+   
+3. Install Jenkins  
+For Windows, the simplest method is the official Jenkins Windows installer. Jenkins installs as a Windows service. (Jenkins) Download Jenkins from:  Jenkins Official Website  Download the Windows installer.  
+   
+4. Install Jenkins on Windows  
+Run the Jenkins .msi file.  
+Follow:  Jenkins Installer  
+      ↓ Next  
+      ↓  
+Installation Folder  
+      ↓  
+Service Configuration  
+      ↓ Port  
+      ↓  
+Java Location  
+      ↓  
+Install  
+      ↓  Finish  
+For a simple student/local setup, you can use the default port:  
+8080  
+The official installer documentation also describes selecting the Java home directory and configuring the Jenkins service. (Jenkins)  
+   
+5. Open Jenkins  
+After installation, open a browser and enter: 
+http://localhost:8080  		
+You 	will 	see: 	Unlock 	Jenkins 
+   
+6. Find Initial Administrator Password  
+Open:  
+C:\Program 
+Files\Jenkins\secrets Find: 
+initialAdminPassword  
+Open the file.  
+Copy the password.  
+Paste it into the Jenkins browser page.  
+The official Jenkins Windows installation guide confirms this location for a default installation. (Jenkins)  
+   
+7. Install Jenkins Plugins  
+Jenkins will show:  
+Customize Jenkins  
+Select:  
+Install suggested plugins  
+Wait until installation finishes.  
+Then create your Jenkins administrator account. Example:  
+Username: admin Password: ********  
+Click:  
+Save and Continue  
+   
+8. Jenkins Dashboard  
+After login, you will see the Jenkins Dashboard.  
+It will look approximately like:  
+------------------------------------------------                  Jenkins  
+------------------------------------------------  
+  
+Welcome to Jenkins  
+  
+[ New Item ]  
+  
+[ Build History ]  
+  
+[ Manage Jenkins ]  
+  
+------------------------------------------------  
+Screenshot to take:  
+Figure 1: Jenkins Dashboard  
+   
+9. Prepare Selenium Project  
+We will use the TestNG project created in the previous practical.  
+Example:  
+TestNGDemo  
+│  
+├── src  
+│   └── tests  
+│       └── SauceDemoTest.java  
+│  
+└── testng.xml  
+The test uses:  
+https://www.saucedemo.com/ and Selenium + TestNG.  
+   
+10. First Test the Project in Eclipse  
+Before using Jenkins, make sure the test works in Eclipse.  
+Right-click:  
+SauceDemoTest.java  
+Select:  
+Run As → TestNG Test You should get:  
+Tests Run: 3  
+Failures: 0  
+Skipped: 0  
+Do this first because Jenkins cannot successfully execute a project that already fails because of its own configuration.  
+   
+11. Create Jenkins Job  
+Go to Jenkins Dashboard.  
+Click: New 
+Item  
+Enter:  
+Selenium_Automation  
+Select:  
+Freestyle project Click: OK  
+   
+12. Configure Jenkins Job  
+You will see the configuration page.  We will configure it step by step.  
+   
+13. General Section  
+In the Description box, enter: Selenium WebDriver automation using TestNG 
+   
+14. Source Code Management  
+If your project is not stored in GitHub/GitLab, for this simple classroom practical, you can skip Source Code Management. Select:  
+None  
+Later, a real CI project can use Git/GitHub.  
+   
+15. Build Section  
+Scroll down to: 
+Build Steps Click:  
+Add build step → Execute Windows batch command Enter a command that runs your test project.  
+If your project uses Maven  
+Use: mvn clean test  
+This is the recommended CI approach if your Selenium project is a Maven project.  
+   
+16. If You Are NOT Using Maven  
+Since you have previously worked with normal Eclipse Java projects, you may not have Maven.  
+In that case, the simplest classroom approach is to create a Maven version of the Selenium project before connecting it to Jenkins.  
+A typical Maven project looks like:  
+SeleniumJenkins  
+│  
+├── pom.xml  
+│  
+└── src  
+    └── test  
+        └── java  
+            └── tests  
+                └── 
+SauceDemoTest.java Then Jenkins can simply execute: mvn clean test  
+This is much easier than manually maintaining a long Java classpath inside Jenkins.  
+   
+17. Add TestNG Report  
+Scroll down to: Postbuild Actions Click:  
+Add post-build action Select:  
+Publish TestNG Results  
+If you don't see this option, install the TestNG Results plugin from:  Manage Jenkins → Plugins Then return to your job configuration.  In the Results field enter:  
+test-output/testng-results.xml or, for Maven/Surefire-based execution: target/surefire-reports/testngresults.xml  
+Use the path that your project actually generates.  
+   
+18. Save the Configuration  
+Click:  
+Save  
+You will return to the project page.  
+You should see: Selenium_Automation 
+   
+19. Build the Project  
+Click:  
+Build Now  
+Jenkins will create:  
+Build #1  
+The process is:  
+Build Now  
+   ↓  
+Jenkins starts  
+   ↓  
+Selenium project executes  
+   ↓  
+TestNG executes  
+   ↓  
+Results generated     ↓ Jenkins stores build  
+   
+20. View Console Output  
+Click:  
+Build #1  
+Then select:  
+Console Output  
+You will see information similar to:  
+Started by user admin  
+  
+Building in workspace...  
+  
+Running tests...  
+  
+Login Test Passed  
+Title Test Passed  
+Invalid Login Test Passed  
+  
+Tests run: 3  
+Failures: 0  
+Skipped: 0  
+  
+Finished: SUCCESS  
+Screenshot  
+Take a screenshot of this page.  
+Caption:  
+Figure 2: Jenkins Console Output showing successful Selenium test execution  
+   
+21. View Build Result  
+Go back to the project.  
+You will see:  
+Build History  
+  
+#1   SUCCESS  
+A successful build is normally shown with a green indicator.  
+   
+22. Generate Test Report  
+Click:  
+Build #1 Look for: 	TestNG 
+Results  
+Click it.  
+You can see:  
+Test Results  
+  
+Total Tests: 3  
+Passed: 3  
+Failed: 0  
+Skipped: 0  
+The exact report layout depends on the Jenkins plugins and test-report format configured.  
+   
+23. Build History  
+Now execute the Jenkins job several times.  
+For example:  
+Build History  
+  
+#5   SUCCESS  
+#4   SUCCESS  
+#3   FAILURE  
+#2   SUCCESS  
+#1   SUCCESS  
+This allows us to analyze previous test executions.  
+   
+24. Analyze Test Execution History  
+Suppose the history shows: Build 
+ Result  Tests  
+#1  	SUCCESS  	3 
+#2  	SUCCESS  	3 
+#3  	FAILURE  	3 
+#4  	SUCCESS  	3 
+#5  	SUCCESS  	3 
+We can conclude:  
+●	Builds #1 and #2 passed. ●  	Build #3 failed.  
+●	Builds #4 and #5 passed.  
+●	The failure can be investigated using Console Output and Test Results.  
+   
+25. Automatic Execution  
+To make Jenkins execute automatically, configure:  
+Build Triggers  
+For a simple demonstration, select: Build periodically Example:  
+H/5 * * * *  
+This means Jenkins schedules the job approximately every 5 minutes. For a classroom practical, you can also use: Poll SCM  when the project is connected to a source-control repository.  
+For a real CI workflow, the preferred setup is generally:  
+Developer changes code  
+        ↓  
+Git repository  
+        ↓  
+Jenkins trigger  
+        ↓ Build  
+        ↓  
+Selenium tests  
+        ↓ Report  
+   
+26. Important Point About Selenium and Jenkins  
+When Jenkins runs Selenium tests, Jenkins must be able to access the browser and the required WebDriver environment.  
+For a simple local setup:  
+Jenkins  
+   ↓  
+Windows machine  
+   ↓  
+Firefox  
+   ↓  
+GeckoDriver  
+   ↓  
+Selenium Test  
