@@ -1,0 +1,58 @@
+
+package p12;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class DynamicTableTest {
+
+    public static void main(String[] args) {
+
+        System.setProperty("webdriver.gecko.driver",
+                "C:\\Users\\STUDENT_039\\Downloads\\geckodriver.exe");
+
+        WebDriver driver = new FirefoxDriver();
+
+        driver.get("https://the-internet.herokuapp.com/tables");
+        driver.manage().window().maximize();
+
+        List<WebElement> names =
+                driver.findElements(By.xpath("//table[@id='table1']//tbody/tr/td[1]"));
+
+        System.out.println("Names in the Table:");
+
+        List<String> originalList = new ArrayList<>();
+
+        for (WebElement name : names) {
+            System.out.println(name.getText());
+            originalList.add(name.getText());
+        }
+
+        driver.findElement(By.xpath("//table[@id='table1']//th[1]/a")).click();
+
+        List<WebElement> sortedNames =
+                driver.findElements(By.xpath("//table[@id='table1']//tbody/tr/td[1]"));
+
+        List<String> actualList = new ArrayList<>();
+
+        for (WebElement name : sortedNames) {
+            actualList.add(name.getText());
+        }
+
+        List<String> expectedList = new ArrayList<>(actualList);
+        Collections.sort(expectedList);
+
+        if (actualList.equals(expectedList)) {
+            System.out.println("Sorting is Correct");
+        } else {
+            System.out.println("Sorting is Incorrect");
+        }
+
+        driver.quit();
+    }
+}
