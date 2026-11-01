@@ -1,0 +1,98 @@
+
+package p13;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
+
+public class FileUploadDownload {
+
+    public static void main(String[] args) throws Exception {
+
+        System.setProperty("webdriver.gecko.driver",
+                "C:\\Users\\STUDENT_039\\Downloads\\geckodriver.exe");
+
+        WebDriver driver = new FirefoxDriver();
+
+        driver.manage().window().maximize();
+
+        // -------- FILE UPLOAD --------
+
+        driver.get("https://the-internet.herokuapp.com/upload");
+
+        driver.findElement(By.id("file-upload"))
+                .sendKeys("C:\\Users\\STUDENT_039\\Desktop\\sample2.txt");
+
+        driver.findElement(By.id("file-submit")).click();
+
+        Thread.sleep(2000);
+
+        String message =
+                driver.findElement(By.tagName("h3")).getText();
+
+        if (message.equals("File Uploaded!")) {
+            System.out.println("Upload Successful");
+        } else {
+            System.out.println("Upload Failed");
+        }
+
+        // -------- FILE DOWNLOAD --------
+
+        driver.get("https://the-internet.herokuapp.com/download");
+
+        // Click a file download link
+        driver.findElement(By.cssSelector("a")).click();
+
+        Thread.sleep(5000);
+
+        System.out.println("Download process completed.");
+
+        // -------- ROBOT FILE SELECTION --------
+
+        driver.get("https://the-internet.herokuapp.com/upload");
+
+        // Click the Choose File button
+        driver.findElement(By.id("file-upload")).click();
+
+        Thread.sleep(2000);
+
+        // Copy file path
+        StringSelection filePath = new StringSelection(
+                "C:\\Users\\STUDENT_039\\Desktop\\sample2.txt");
+
+        Toolkit.getDefaultToolkit()
+                .getSystemClipboard()
+                .setContents(filePath, null);
+
+        // Create Robot object
+        Robot robot = new Robot();
+
+        // Paste file path
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.keyPress(KeyEvent.VK_V);
+
+        robot.keyRelease(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
+
+        // Press Enter
+        robot.keyPress(KeyEvent.VK_ENTER);
+        robot.keyRelease(KeyEvent.VK_ENTER);
+
+        Thread.sleep(2000);
+
+        // Submit the uploaded file
+        driver.findElement(By.id("file-submit")).click();
+
+        Thread.sleep(2000);
+
+        System.out.println("Robot file selection completed.");
+
+        // Close browser
+        driver.quit();
+    }
+}
