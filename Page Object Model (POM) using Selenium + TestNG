@@ -1,0 +1,206 @@
+STEP 1: Create a Java Project
+-----------------------------
+1. Open Eclipse.
+2. File > New > Java Project.
+3. Project name: POMDemo
+4. Click Finish.
+
+STEP 2: Configure Selenium
+--------------------------
+If Selenium is already configured, skip this step.
+1. Right-click POMDemo > Build Path > Configure Build Path.
+2. Open Libraries > Classpath > Add External JARs.
+3. Select your Selenium JAR files and click Apply and Close.
+
+Tip: If your course setup uses Selenium Manager, a recent Selenium version may manage
+the browser driver automatically. Otherwise, configure a compatible Firefox/geckodriver.
+
+STEP 3: Install TestNG
+----------------------
+1. Help > Eclipse Marketplace.
+2. Search for TestNG.
+3. Install TestNG for Eclipse and restart Eclipse if requested.
+
+STEP 4: Create the pages package
+--------------------------------
+1. Right-click src > New > Package.
+2. Package name: pages
+3. Click Finish.
+
+STEP 5: Create LoginPage.java
+-----------------------------
+1. Right-click pages > New > Class.
+2. Class name: LoginPage
+3. Paste the code from src/pages/LoginPage.java.
+
+STEP 6: Create the tests package
+--------------------------------
+1. Right-click src > New > Package.
+2. Package name: tests
+3. Click Finish.
+
+STEP 7: Create LoginTest.java
+-----------------------------
+1. Right-click tests > New > Class.
+2. Class name: LoginTest
+3. Paste the code from src/tests/LoginTest.java.
+
+PROJECT STRUCTURE
+-----------------
+POMDemo
+└── src
+    ├── pages
+    │   └── LoginPage.java
+    └── tests
+        └── LoginTest.java
+
+STEP 8: Understand POM
+----------------------
+LoginPage.java stores page locators and actions:
+- Username field
+- Password field
+- Login button
+- Methods to enter credentials and click Login
+
+LoginTest.java runs the test and checks the result.
+
+Flow:
+LoginTest.java
+    -> LoginPage.java
+        -> Username, password, and Login button
+            -> Sauce Demo website
+
+Important line:
+loginPage = new LoginPage(driver);
+This creates the page-object and passes the browser driver to it.
+
+STEP 9: Understand the assertion
+--------------------------------
+Assert.assertTrue(currentURL.contains("inventory"), ...);
+This checks that the current URL contains "inventory".
+If it does, the assertion passes. Otherwise, the test fails.
+
+@BeforeMethod runs before each test.
+@Test marks a TestNG test method.
+@AfterMethod closes the browser after the test.
+
+STEP 10: Run the test
+---------------------
+1. Right-click LoginTest.java.
+2. Choose Run As > TestNG Test.
+3. Firefox should open the Sauce Demo website.
+4. The test enters:
+   Username: standard_user
+   Password: secret_sauce
+5. It clicks Login, checks the URL, and closes Firefox.
+
+EXPECTED RESULT
+---------------
+The test should pass and print "Login successful" if the inventory page opens.
+
+REQUIREMENTS / TROUBLESHOOTING
+------------------------------
+- Firefox must be installed.
+- Selenium and TestNG must be on the project's build path.
+- Use a compatible geckodriver if your setup requires one.
+- The package declarations must match the folders: pages and tests.
+- These are two Java source files; keep them in their respective packages.
+
+
+==================================================
+LoginPage.java
+==================================================
+
+package pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class LoginPage {
+
+    WebDriver driver;
+
+    // Locators
+    By username = By.id("user-name");
+    By password = By.id("password");
+    By loginButton = By.id("login-button");
+
+    // Constructor
+    public LoginPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    // Enter username
+    public void enterUsername(String user) {
+        driver.findElement(username).sendKeys(user);
+    }
+
+    // Enter password
+    public void enterPassword(String pass) {
+        driver.findElement(password).sendKeys(pass);
+    }
+
+    // Click login button
+    public void clickLogin() {
+        driver.findElement(loginButton).click();
+    }
+
+    // Complete login
+    public void login(String user, String pass) {
+        enterUsername(user);
+        enterPassword(pass);
+        clickLogin();
+    }
+}
+
+
+==================================================
+LoginTest.java
+==================================================
+
+package tests;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import pages.LoginPage;
+
+public class LoginTest {
+
+    WebDriver driver;
+    LoginPage loginPage;
+
+    @BeforeMethod
+    public void setUp() {
+        driver = new FirefoxDriver();
+        driver.manage().window().maximize();
+        driver.get("https://www.saucedemo.com/");
+
+        loginPage = new LoginPage(driver);
+    }
+
+    @Test
+    public void validLoginTest() {
+        loginPage.login("standard_user", "secret_sauce");
+
+        String currentURL = driver.getCurrentUrl();
+
+        Assert.assertTrue(
+            currentURL.contains("inventory"),
+            "Login failed: inventory page URL was not found."
+        );
+
+        System.out.println("Login successful");
+    }
+
+    @AfterMethod
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}
