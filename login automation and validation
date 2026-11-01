@@ -1,0 +1,43 @@
+PRACTICAL NO 5 CODE:
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+public class LoginAutomationTest {
+public static WebDriver driver;
+//
+static String driverPath = "C:\\Users\\DELL\\Downloads\\geckodriver.exe";
+public static void main(String[] args) {
+// TODO Auto-generated method stub
+// Set the path to the Geckodriver executable
+System.setProperty("webdriver.gecko.driver", "C:\\Users\\DELL\\Downloads\\geckodriver.exe");
+// Create FirefoxOptions instance
+FirefoxOptions options = new FirefoxOptions();
+// Initialize FirefoxDriver with options
+driver = new FirefoxDriver(options);
+try {
+// Navigate to a webpage
+//driver.get("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
+//driver.get("https://www.facebook.com/");
+//driver.manage().window().maximize();
+driver.get("https://www.saucedemo.com/");
+//read username
+WebElement un=driver.findElement(By.id("user-name"));
+un.sendKeys("standard_user");
+//read password
+WebElement pw=driver.findElement(By.id("password"));
+pw.sendKeys("secret_sauce");
+//Login Button Click
+WebElement btn=driver.findElement(By.id("login-button"));
+btn.click();
+} catch (Exception ex) {
+System.out.println("An error occurred: " + ex.toString());
+} finally {
+// Quit the driver to close all browser windows and end the session
+if (driver != null) {
+//driver.quit();
+}
+}
+}
+}
