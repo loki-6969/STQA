@@ -1,0 +1,34 @@
+
+package p8;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+public class FindAllLinks {
+
+    static String driverPath = "C:\\Users\\STUDENT_039\\Downloads\\geckodriver(1).exe";
+
+    public static void main(String[] args) {
+
+        System.setProperty("webdriver.gecko.driver", driverPath);
+
+        WebDriver driver = new FirefoxDriver();
+
+        String appUrl = "https://www.google.co.in/";
+
+        driver.get(appUrl);
+
+        java.util.List<WebElement> links =
+                driver.findElements(By.tagName("a"));
+
+        for (int i = 1; i < links.size(); i++) {
+            System.out.println(links.get(i).getText());
+        }
+
+        System.out.println("Total No. of Links: " + links.size());
+
+        // driver.quit();
+    }
+}
